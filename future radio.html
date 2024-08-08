@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Futuristic Radio Cataloguing</title>
+<link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/ravana69/radio/main/favicon.ico">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+  body {
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+    padding: 20px;
+    background-color: #0c0c1d;
+    color: #00ffff;
+    overflow-x: hidden;
+  }
+
+  h1 {
+    font-size: 3em;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px #00ffff;
+  }
+
+  #stations {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+
+  button {
+    background-color: rgba(0, 255, 255, 0.1);
+    color: #00ffff;
+    border: 2px solid #00ffff;
+    border-radius: 25px;
+    padding: 12px 24px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  }
+
+  button:hover, button.active {
+    background-color: #00ffff;
+    color: #0c0c1d;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  }
+
+  #autoShuffleContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  #autoShuffleBtn {
+    background-color: rgba(0, 255, 127, 0.1);
+    border-color: #00ff7f;
+    color: #00ff7f;
+    font-size: 16px;
+    padding: 15px 30px;
+  }
+
+  #autoShuffleBtn:hover {
+    background-color: #00ff7f;
+    color: #0c0c1d;
+  }
+
+  #player {
+    width: 100%;
+    max-width: 500px;
+    margin: 30px auto;
+    background-color: #0c0c1d;
+    border: 2px solid #00ffff;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+    color: #00ffff;
+  }
+
+  #previousStations {
+    background-color: rgba(0, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 30px;
+    text-align: left;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #previousStations h2 {
+    margin-top: 0;
+    font-size: 1.5em;
+    color: #00ffff;
+  }
+
+  #previousList {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  #previousList li {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: rgba(0, 255, 255, 0.1);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+
+  #previousList li:hover {
+    transform: translateX(10px);
+    background-color: rgba(0, 255, 255, 0.2);
+  }
+
+  @keyframes glow {
+    0% { box-shadow: 0 0 5px #00ffff; }
+    50% { box-shadow: 0 0 20px #00ffff, 0 0 30px #00ffff; }
+    100% { box-shadow: 0 0 5px #00ffff; }
+  }
+
+  .glow {
+    animation: glow 2s infinite;
+  }
+</style>
+</head>
+<body>
+  <h1 class="glow">Ravana Radio</h1>
+  <div id="stations">
+    <button onclick="playRadio('Club', 'https://sp14.instainternet.com/8050/stream', this)">Club</button>
+    <button onclick="playRadio('Maango', 'https://bcovlive-a.akamaihd.net/19b535b7499a4719a5c19e043063f5d9/ap-southeast-1/6034685947001/playlist.m3u8', this)">Maango</button>
+    <button onclick="playRadio('90FM', 'https://icecast.octosignals.com/radio90_final', this)">90FM</button>
+    <button onclick="playRadio('Suno', 'https://25703.live.streamtheworld.com/SUNO917_SC', this)">Suno</button>
+    <button onclick="playRadio('Keralam', 'https://ice31.securenetsystems.net/RADIOKERAL', this)">Keralam</button>
+    <button onclick="playRadio('Talky', 'https://media.streambrothers.com/stream/8104', this)">Talky</button>
+    <button onclick="playRadio('City Malayalam', 'https://prclive4.listenon.in/Malayalam', this)">City Malayalam</button>
+    <button onclick="playRadio('Benziger', 'https://radio.radiobenziger.com/stream?type=http&nocache=1169', this)">Benziger</button>
+    <button onclick="playRadio('Asha', 'https://s2.radio.co/s3801784f1/listen', this)">Asha</button>
+    <button onclick="playRadio('Neythal', 'https://www.liveradio.es/http://91.121.82.33:64420/;', this)">Neythal</button>
+    <button onclick="playRadio('Ente', 'https://cast1.my-control-panel.com/proxy/enteradio/stream', this)">Ente</button>
+    <button onclick="playRadio('Media Village', 'https://443-1.autopo.st/183/stream', this)">Media Village</button>
+    <button onclick="playRadio('Malayalam USA', 'https://usa3.fastcast4u.com/proxy/lkuriako?mp=/1', this)">Malayalam USA</button>
+    <button onclick="playRadio('Mangalam', 'https://www.liveradio.es/http://radiomangalam.in:8000/stream', this)">Mangalam</button>
+    <button onclick="playRadio('Sargakshetra', 'https://edge.mixlr.com/channel/ugbfe', this)">Sargakshetra</button>
+    <button onclick="playRadio('Beats', 'https://strw3.openstream.co/668?aw_0_1st.collectionid%3D6761%26stationId%3D6761%26publisherId%3D692%26k%3D1719395343', this)">Beats</button>
+    <button onclick="playRadio('Lemon', 'https://www.liveradio.es/https://schedule.radiolemonlive.com:7443/listen/radio_lemon_live_bangalore/live', this)">Lemon</button>
+    <button onclick="playRadio('Hello', 'https://www.liveradio.es/http://97.74.94.190:17101/helloradio.ogg', this)">Hello</button>
+    <button onclick="playRadio('Ahalia', 'https://cast1.my-control-panel.com/proxy/ahaliafm/stream', this)">Ahalia</button>
+    <button onclick="playRadio('Asia', 'https://strw3.openstream.co/766', this)">Asia</button>
+    <button onclick="playRadio('Malayalam', 'https://radiomalayalamfm.com/radio/8000/radio.mp3', this)">Malayalam</button>
+    <button onclick="playRadio('Gramaphone', 'https://usa15.fastcast4u.com/proxy/radiomall/stream', this)">Gramaphone</button>
+  </div>
+
+  <div id="autoShuffleContainer">
+    <button id="autoShuffleBtn" onclick="toggleAutoShuffle()">Start Auto Shuffle</button>
+  </div>
+
+  <audio id="player" controls>
+    Your browser does not support the audio element.
+  </audio>
+
+  <div id="previousStations">
+    <h2>Previously Played:</h2>
+    <ul id="previousList"></ul>
+  </div>
+
+  <script>
+    const player = document.getElementById('player');
+    let currentButton = null;
+    let autoShuffleInterval = null;
+    const buttons = document.querySelectorAll('#stations button');
+    const previousList = document.getElementById('previousList');
+    let lastPlayedStations = [];
+
+    function playRadio(name, url, button) {
+      document.title = `Futuristic Radio - ${name}`;
+
+      if (lastPlayedStations.length >= 5) {
+        lastPlayedStations.shift();
+      }
+      lastPlayedStations.push(name);
+
+      updatePreviousList();
+
+      if (currentButton) {
+        currentButton.classList.remove('active');
+      }
+
+      button.classList.add('active');
+      currentButton = button;
+
+      if (url.endsWith('.m3u8')) {
+        if (Hls.isSupported()) {
+          const hls = new Hls();
+          hls.loadSource(url);
+          hls.attachMedia(player);
+          hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            player.play()
+              .then(() => console.log(`Playing ${name}`))
+              .catch(err => console.error(`Error playing ${name}: ${err}`));
+          });
+        } else if (player.canPlayType('application/vnd.apple.mpegurl')) {
+          player.src = url;
+          player.play()
+            .then(() => console.log(`Playing ${name}`))
+            .catch(err => console.error(`Error playing ${name}: ${err}`));
+        } else {
+          console.error('HLS not supported');
+        }
+      } else {
+        player.src = url;
+        player.play()
+          .then(() => console.log(`Playing ${name}`))
+          .catch(err => console.error(`Error playing ${name}: ${err}`));
+      }
+    }
+
+    function updatePreviousList() {
+      previousList.innerHTML = '';
+
+      lastPlayedStations.forEach(station => {
+        const listItem = document.createElement('li');
+        listItem.textContent = station;
+        previousList.appendChild(listItem);
+      });
+    }
+
+    function shuffleRadio() {
+      const randomIndex = Math.floor(Math.random() * buttons.length);
+      buttons[randomIndex].click();
+    }
+
+    function toggleAutoShuffle() {
+      const autoShuffleBtn = document.getElementById('autoShuffleBtn');
+      if (autoShuffleInterval) {
+        clearInterval(autoShuffleInterval);
+        autoShuffleInterval = null;
+        autoShuffleBtn.textContent = 'Start Auto Shuffle';
+        autoShuffleBtn.style.backgroundColor = 'rgba(0, 255, 127, 0.1)';
+        autoShuffleBtn.style.color = '#00ff7f';
+      } else {
+        autoShuffleInterval = setInterval(shuffleRadio, 15000);
+        autoShuffleBtn.textContent = 'Stop Auto Shuffle';
+        autoShuffleBtn.style.backgroundColor = '#00ff7f';
+        autoShuffleBtn.style.color = '#0c0c1d';
+        shuffleRadio();
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</body>
+</html>
