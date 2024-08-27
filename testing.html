@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RADIOFFICE</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #FF69B4;
+    color: #000;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  body.dark-mode {
+    background-color: #333;
+    color: #fff;
+  }
+  .player-container {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    transition: background-color 0.3s;
+  }
+  body.dark-mode .player-container {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .date-time {
+    text-align: center;
+    font-size: 0.8em;
+    margin-bottom: 20px;
+  }
+  .progress-container {
+    width: 100%;
+    height: 5px;
+    background-color: #ddd;
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+  .progress-bar {
+    width: 0%;
+    height: 100%;
+    background-color: #007bff;
+    transition: width 0.1s;
+  }
+  .volume-container {
+    width: 100%;
+    height: 5px;
+    background-color: #ddd;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+  .volume-bar {
+    width: 100%;
+    height: 100%;
+    background-color: #007bff;
+  }
+  .duration {
+    text-align: center;
+    font-size: 0.8em;
+    margin-bottom: 10px;
+  }
+  .current-audio, .audio-url {
+    text-align: center;
+    font-size: 0.8em;
+    margin-bottom: 10px;
+  }
+  .controls {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .control-btn {
+    background-color: #800080;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin: 0 10px;
+    cursor: pointer;
+  }
+  .previously-played {
+    text-align: center;
+    font-size: 0.8em;
+    margin-bottom: 20px;
+  }
+  #stations {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 20px;
+  }
+  #stations button {
+    background-color: #808080;
+    color: #ffffff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  #stations button.active {
+    background-color: #779CE8;
+  }
+  audio {
+    width: 100%;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+  <div class="player-container">
+    <h1>RADIOFFICE</h1>
+    <div class="date-time" id="dateTime"></div>
+    <div class="progress-container" id="progressContainer">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="volume-container" id="volumeContainer">
+      <div class="volume-bar" id="volumeBar"></div>
+    </div>
+    <div class="duration">Duration: <span id="currentTime">0:00</span> / <span id="duration">0:00</span></div>
+    <div class="current-audio" id="currentAudio">Current Audio: </div>
+    <div class="audio-url" id="audioUrl">Current Audio URL Number: </div>
+    <div class="controls">
+      <button class="control-btn" id="shuffleBtn">&#x1F500;</button>
+      <button class="control-btn" id="themeBtn">&#x1F3A8;</button>
+      <button class="control-btn" id="darkModeBtn">&#x1F319;</button>
+    </div>
+    <div class="previously-played">
+      <strong>Previously Played:</strong>
+      <ul id="previousList"></ul>
+    </div>
+ <div id="stations" class="hidden">
+    <button onclick="playRadio('Club', 'https://eu10.fastcast4u.com/clubfmuae', this)">Club</button>
+    <button onclick="playRadio('Maango', 'https://radiomangoalive1-a.akamaihd.net/9268677ef77949a9b21d33239a55eadd/ap-southeast-1/6034685947001/playlist.m3u8', this)">Maango</button>
+    <button onclick="playRadio('90FM', 'https://icecast.octosignals.com/radio90_final', this)">90FM</button>
+    <button onclick="playRadio('Suno', 'https://25703.live.streamtheworld.com/SUNO917_SC', this)">Suno</button>
+    <button onclick="playRadio('Keralam', 'https://ice31.securenetsystems.net/RADIOKERAL', this)">Keralam</button>
+    <button onclick="playRadio('Talky', 'https://media.streambrothers.com/stream/8104', this)">Talky</button>
+    <button onclick="playRadio('City Malayalam', 'https://prclive4.listenon.in/Malayalam', this)">City Malayalam</button>
+    <button onclick="playRadio('Benziger', 'https://radio.radiobenziger.com/stream?type=http&nocache=1169', this)">Benziger</button>
+    <button onclick="playRadio('Asha', 'https://s2.radio.co/s3801784f1/listen', this)">Asha</button>
+    <button onclick="playRadio('Neythal', 'https://www.liveradio.es/http://91.121.82.33:64420/;', this)">Neythal</button>
+    <button onclick="playRadio('Ente', 'https://cast1.my-control-panel.com/proxy/enteradio/stream', this)">Ente</button>
+    <button onclick="playRadio('Media Village', 'https://443-1.autopo.st/183/stream', this)">Media Village</button>
+    <button onclick="playRadio('Malayalam USA', 'https://usa3.fastcast4u.com/proxy/lkuriako?mp=/1', this)">Malayalam USA</button>
+    <button onclick="playRadio('Mangalam', 'https://www.liveradio.es/http://radiomangalam.in:8000/stream', this)">Mangalam</button>
+    <button onclick="playRadio('Sargakshetra', 'https://edge.mixlr.com/channel/ugbfe', this)">Sargakshetra</button>
+    <button onclick="playRadio('Beats', 'https://strw3.openstream.co/668?aw_0_1st.collectionid%3D6761%26stationId%3D6761%26publisherId%3D692%26k%3D1719395343', this)">Beats</button>
+    <button onclick="playRadio('Lemon', 'https://www.liveradio.es/https://schedule.radiolemonlive.com:7443/listen/radio_lemon_live_bangalore/live', this)">Lemon</button>
+    <button onclick="playRadio('Hello', 'https://www.liveradio.es/http://97.74.94.190:17101/helloradio.ogg', this)">Hello</button>
+    <button onclick="playRadio('Ahalia', 'https://cast1.my-control-panel.com/proxy/ahaliafm/stream', this)">Ahalia</button>
+    <button onclick="playRadio('Asia', 'https://strw3.openstream.co/766', this)">Asia</button>
+    <button onclick="playRadio('Malayalam', 'https://radiomalayalamfm.com/radio/8000/radio.mp3', this)">Malayalam</button>
+    <button onclick="playRadio('Gramaphone', 'https://usa15.fastcast4u.com/proxy/radiomall/stream', this)">Gramaphone</button>
+    <!-- Add other radio station buttons -->
+  </div>
+    <audio id="player" controls>
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    const player = document.getElementById('player');
+    let currentButton = null;
+    const buttons = document.querySelectorAll('#stations button');
+    const previousList = document.getElementById('previousList');
+    let lastPlayedStations = [];
+
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+    const volumeContainer = document.getElementById('volumeContainer');
+    const volumeBar = document.getElementById('volumeBar');
+
+    function updateDateTime() {
+      const now = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      document.getElementById('dateTime').textContent = now.toLocaleDateString('en-US', options);
+    }
+
+    function playRadio(name, url, button) {
+      document.title = `MUSIOFFICE - ${name}`;
+      
+      if (lastPlayedStations.length >= 5) {
+        lastPlayedStations.shift();
+      }
+      lastPlayedStations.push(name);
+      updatePreviousList();
+
+      if (currentButton) {
+        currentButton.classList.remove('active');
+      }
+      button.classList.add('active');
+      currentButton = button;
+
+      if (url.endsWith('.m3u8')) {
+        if (Hls.isSupported()) {
+          const hls = new Hls();
+          hls.loadSource(url);
+          hls.attachMedia(player);
+          hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            player.play().catch(err => console.error(`Error playing ${name}: ${err}`));
+          });
+        } else if (player.canPlayType('application/vnd.apple.mpegurl')) {
+          player.src = url;
+          player.play().catch(err => console.error(`Error playing ${name}: ${err}`));
+        } else {
+          console.error('HLS not supported');
+        }
+      } else {
+        player.src = url;
+        player.play().catch(err => console.error(`Error playing ${name}: ${err}`));
+      }
+
+      document.getElementById('currentAudio').textContent = `Current Audio: ${name}`;
+      document.getElementById('audioUrl').textContent = `Current Audio URL Number: ${Math.floor(Math.random() * 10000)}`;
+    }
+
+    function updatePreviousList() {
+      previousList.innerHTML = '';
+      lastPlayedStations.forEach(station => {
+        const listItem = document.createElement('li');
+        listItem.textContent = station;
+        previousList.appendChild(listItem);
+      });
+    }
+
+    function shuffleRadio() {
+      const randomIndex = Math.floor(Math.random() * buttons.length);
+      buttons[randomIndex].click();
+    }
+
+    document.getElementById('shuffleBtn').addEventListener('click', shuffleRadio);
+    document.getElementById('themeBtn').addEventListener('click', () => {
+      document.body.style.backgroundColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    });
+    document.getElementById('darkModeBtn').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
+
+    player.addEventListener('timeupdate', () => {
+      const progress = (player.currentTime / player.duration) * 100;
+      progressBar.style.width = `${progress}%`;
+      document.getElementById('currentTime').textContent = formatTime(player.currentTime);
+    });
+
+    player.addEventListener('durationchange', () => {
+      document.getElementById('duration').textContent = formatTime(player.duration);
+    });
+
+    progressContainer.addEventListener('click', (e) => {
+      const clickPosition = (e.clientX - progressContainer.getBoundingClientRect().left) / progressContainer.offsetWidth;
+      player.currentTime = clickPosition * player.duration;
+    });
+
+    volumeContainer.addEventListener('click', (e) => {
+      const clickPosition = (e.clientX - volumeContainer.getBoundingClientRect().left) / volumeContainer.offsetWidth;
+      player.volume = clickPosition;
+      volumeBar.style.width = `${clickPosition * 100}%`;
+    });
+
+    function formatTime(time) {
+      const minutes = Math.floor(time / 60);
+      const seconds = Math.floor(time % 60);
+      return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+  </script>
+</body>
+</html>
