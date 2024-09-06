@@ -1,0 +1,2 @@
+    <button onclick="playRadio('Maango', 'https://radiomangoalive1-a.akamaihd.net/9268677ef77949a9b21d33239a55eadd/ap-southeast-1/6034685947001/playlist.m3u8', this)">Maango</button>
+    <button onclick="playRadio('Malayalam', 'https://radiomalayalamfm.com/radio/8000/radio.mp3', this)">Malayalam</button>
