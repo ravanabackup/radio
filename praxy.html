@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cataloguing</title>
+<!-- Link to favicon -->
+<link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/ravana69/radio/main/favicon.ico">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 160px;
+    background: url('https://rawgithubusercontent.deno.dev/ravana69/radio/main/excel.jpg') center center / cover no-repeat fixed;
+    color: #808080;
+  }
+  #stations {
+    margin-bottom: 20px;
+  }
+  #previousStations {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  audio {
+    width: 100%;
+    max-width: 400px;
+    margin: 20px auto;
+    display: block;
+    background-color: #ececec;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  .hidden {
+    display: none;
+  }
+  .active {
+    background-color: #779CE8;
+    color: #fff;
+  }
+  button {
+    background-color: #808080;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    margin: 5px;
+    cursor: pointer;
+  }
+  #autoShuffleBtn {
+    background-color: #808080;
+  }
+  audio::-webkit-media-controls-panel {
+    background-color: #808080;
+  }
+  audio::-webkit-media-controls-play-button,
+  audio::-webkit-media-controls-mute-button,
+  audio::-webkit-media-controls-timeline,
+  audio::-webkit-media-controls-current-time-display,
+  audio::-webkit-media-controls-time-remaining-display,
+  audio::-webkit-media-controls-seek-back-button,
+  audio::-webkit-media-controls-seek-forward-button,
+  audio::-webkit-media-controls-fullscreen-button,
+  audio::-webkit-media-controls-rewind-button,
+  audio::-webkit-media-controls-return-to-realtime-button,
+  audio::-webkit-media-controls-show-closed-captions-button {
+    filter: invert(0);
+  }
+</style>
+</head>
+<body>
+  <h1></h1>
+  <button id="toggleStationsBtn" onclick="toggleStations()">Stations</button>
+  <div id="stations" class="hidden">
+    <button onclick="playRadio('Club', 'https://www.liveradio.es/https://eu10.fastcast4u.com/clubfmuae', this)">Club</button>
+    <button onclick="playRadio('90FM', 'https://icecast.octosignals.com/radio90_final', this)">90FM</button>
+    <button onclick="playRadio('Suno', 'https://www.liveradio.es/https://25703.live.streamtheworld.com/SUNO917_SC', this)">Suno</button>
+    <button onclick="playRadio('Keralam', 'https://www.liveradio.es/https://ice31.securenetsystems.net/RADIOKERAL', this)">Keralam</button>
+    <button onclick="playRadio('Talky', 'https://media.streambrothers.com/stream/8104', this)">Talky</button>
+    <button onclick="playRadio('City Malayalam', 'https://prclive4.listenon.in/Malayalam', this)">City Malayalam</button>
+    <button onclick="playRadio('Benziger', 'https://radio.radiobenziger.com/stream?type=http&nocache=1169', this)">Benziger</button>
+    <button onclick="playRadio('Asha', 'https://www.liveradio.es/https://s2.radio.co/s3801784f1/listen', this)">Asha</button>
+    <button onclick="playRadio('Neythal', 'https://www.liveradio.es/http://91.121.82.33:64420/;', this)">Neythal</button>
+    <button onclick="playRadio('Ente', 'https://www.liveradio.es/https://cast1.my-control-panel.com/proxy/enteradio/stream', this)">Ente</button>
+    <button onclick="playRadio('Media Village', 'https://443-1.autopo.st/183/stream', this)">Media Village</button>
+    <button onclick="playRadio('Malayalam USA', 'https://www.liveradio.es/https://usa3.fastcast4u.com/proxy/lkuriako?mp=/1', this)">Malayalam USA</button>
+    <button onclick="playRadio('Mangalam', 'https://www.liveradio.es/http://radiomangalam.in:8000/stream', this)">Mangalam</button>
+    <button onclick="playRadio('Sargakshetra', 'https://www.liveradio.es/https://edge.mixlr.com/channel/ugbfe', this)">Sargakshetra</button>
+    <button onclick="playRadio('Beats', 'https://strw3.openstream.co/668?aw_0_1st.collectionid%3D6761%26stationId%3D6761%26publisherId%3D692%26k%3D1719395343', this)">Beats</button>
+    <button onclick="playRadio('Lemon', 'https://www.liveradio.es/https://schedule.radiolemonlive.com:7443/listen/radio_lemon_live_bangalore/live', this)">Lemon</button>
+    <button onclick="playRadio('Hello', 'https://www.liveradio.es/http://97.74.94.190:17101/helloradio.ogg', this)">Hello</button>
+    <button onclick="playRadio('Ahalia', 'https://www.liveradio.es/https://cast1.my-control-panel.com/proxy/ahaliafm/stream', this)">Ahalia</button>
+    <button onclick="playRadio('Asia', 'https://strw3.openstream.co/766', this)">Asia</button>
+    <button onclick="playRadio('Gramaphone', 'https://www.liveradio.es/https://usa15.fastcast4u.com/proxy/radiomall/stream', this)">Gramaphone</button>
+    <!-- Add other radio station buttons -->
+  </div>
+
+  <div id="previousStations">
+    <h2>Previously Played:</h2>
+    <ul id="previousList"></ul>
+  </div>
+
+  <button id="togglePlayerBtn" onclick="togglePlayer()">Player</button>
+  <button id="autoShuffleBtn" onclick="toggleAutoShuffle()">Start Shuffle</button>
+
+  <audio id="player" controls class="hidden">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    const player = document.getElementById('player');
+    let currentButton = null;
+    let autoShuffleInterval = null;
+    const buttons = document.querySelectorAll('#stations button');
+    const previousList = document.getElementById('previousList');
+    let lastPlayedStations = [];
+
+    function playRadio(name, url, button) {
+      // Set document title
+      document.title = `Cataloguing - ${name}`;
+
+      // Add the station to previously played list
+      if (lastPlayedStations.length >= 5) {
+        lastPlayedStations.shift(); // Remove the oldest station if list is full
+      }
+      lastPlayedStations.push(name);
+
+      // Update the displayed list
+      updatePreviousList();
+
+      // Reset previous active button
+      if (currentButton) {
+        currentButton.classList.remove('active');
+      }
+
+      // Set current active button
+      button.classList.add('active');
+      currentButton = button;
+
+      // Check if the URL ends with .m3u8 to determine if it's an HLS playlist
+      if (url.endsWith('.m3u8')) {
+        if (Hls.isSupported()) {
+          const hls = new Hls();
+          hls.loadSource(url);
+          hls.attachMedia(player);
+          hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            player.play()
+              .then(() => console.log(`Playing ${name}`))
+              .catch(err => console.error(`Error playing ${name}: ${err}`));
+          });
+        } else if (player.canPlayType('application/vnd.apple.mpegurl')) {
+          player.src = url;
+          player.play()
+            .then(() => console.log(`Playing ${name}`))
+            .catch(err => console.error(`Error playing ${name}: ${err}`));
+        } else {
+          console.error('HLS not supported');
+        }
+      } else {
+        player.src = url;
+        player.play()
+          .then(() => console.log(`Playing ${name}`))
+          .catch(err => console.error(`Error playing ${name}: ${err}`));
+      }
+    }
+
+    function updatePreviousList() {
+      previousList.innerHTML = ''; // Clear previous list
+
+      lastPlayedStations.forEach(station => {
+        const listItem = document.createElement('li');
+        listItem.textContent = station;
+        previousList.appendChild(listItem);
+      });
+    }
+
+    function shuffleRadio() {
+      const randomIndex = Math.floor(Math.random() * buttons.length);
+      buttons[randomIndex].click();
+    }
+
+    function toggleAutoShuffle() {
+      const autoShuffleBtn = document.getElementById('autoShuffleBtn');
+      if (autoShuffleInterval) {
+        clearInterval(autoShuffleInterval);
+        autoShuffleInterval = null;
+        autoShuffleBtn.textContent = 'Start Shuffle';
+        autoShuffleBtn.style.backgroundColor = '#808080';
+      } else {
+        autoShuffleInterval = setInterval(shuffleRadio, 15000); // 15 seconds
+        autoShuffleBtn.textContent = 'Stop Shuffle';
+        autoShuffleBtn.style.backgroundColor = '#000000';
+        shuffleRadio(); // Start with a random station immediately
+      }
+    }
+
+    function togglePlayer() {
+      const player = document.getElementById('player');
+      const togglePlayerBtn = document.getElementById('togglePlayerBtn');
+      if (player.classList.contains('hidden')) {
+        player.classList.remove('hidden');
+        togglePlayerBtn.textContent = 'Player';
+      } else {
+        player.classList.add('hidden');
+        togglePlayerBtn.textContent = 'Player';
+      }
+    }
+
+    function toggleStations() {
+      const stations = document.getElementById('stations');
+      const toggleStationsBtn = document.getElementById('toggleStationsBtn');
+      if (stations.classList.contains('hidden')) {
+        stations.classList.remove('hidden');
+        toggleStationsBtn.textContent = 'Hide Stations';
+      } else {
+        stations.classList.add('hidden');
+        toggleStationsBtn.textContent = 'Stations';
+      }
+    }
+
+    function playPreviousStation() {
+      if (lastPlayedStations.length > 1) {
+        const previousStationName = lastPlayedStations[lastPlayedStations.length - 2];
+        const previousButton = Array.from(buttons).find(button => button.textContent === previousStationName);
+        if (previousButton) {
+          previousButton.click();
+        }
+      }
+    }
+
+    function playRandomStation() {
+      shuffleRadio();
+    }
+
+document.addEventListener('keydown', (event) => {
+      const key = event.key.toLowerCase();
+      if (key === 'a') {
+        playPreviousStation();
+      } else if (key === 'd') {
+        playRandomStation();
+      } else if (key === 's') {
+        toggleAutoShuffle();
+      } else if (key === 'm') {
+        player.muted = !player.muted; // Toggle mute
+      }
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</body>
+</html>
