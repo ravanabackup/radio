@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cataloguing</title>
+<!-- Link to favicon -->
+<link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/ravana69/radio/main/favicon.ico">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 160px;
+    background: url('https://rawgithubusercontent.deno.dev/ravana69/radio/main/excel.jpg') center center / cover no-repeat fixed;
+    color: #808080;
+  }
+  #stations {
+    margin-bottom: 20px;
+  }
+  #previousStations {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  audio {
+    width: 100%;
+    max-width: 400px;
+    margin: 20px auto;
+    display: block;
+    background-color: #ececec;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  .hidden {
+    display: none;
+  }
+  .active {
+    background-color: #779CE8;
+    color: #fff;
+  }
+  button {
+    background-color: #808080;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    margin: 5px;
+    cursor: pointer;
+  }
+  #autoShuffleBtn {
+    background-color: #808080;
+  }
+  audio::-webkit-media-controls-panel {
+    background-color: #808080;
+  }
+  audio::-webkit-media-controls-play-button,
+  audio::-webkit-media-controls-mute-button,
+  audio::-webkit-media-controls-timeline,
+  audio::-webkit-media-controls-current-time-display,
+  audio::-webkit-media-controls-time-remaining-display,
+  audio::-webkit-media-controls-seek-back-button,
+  audio::-webkit-media-controls-seek-forward-button,
+  audio::-webkit-media-controls-fullscreen-button,
+  audio::-webkit-media-controls-rewind-button,
+  audio::-webkit-media-controls-return-to-realtime-button,
+  audio::-webkit-media-controls-show-closed-captions-button {
+    filter: invert(0);
+  }
+</style>
+</head>
+<body>
+  <h1></h1>
+  <button id="toggleStationsBtn" onclick="toggleStations()">Stations</button>
+<div id="stations" class="hidden">
+    <button onclick="playRadio('Rafa', 'https://gains.reviveradio.net/proxy/rafaradio?mp=/stream', this)">Rafa</button>
+    <button onclick="playRadio('Menorah', 'https://gains.reviveradio.net/proxy/menorah?mp=/stream', this)">Menorah</button>
+    <button onclick="playRadio('DVN Radio', 'https://www.liveradio.es/https://ice31.securenetsystems.net/DVN', this)">DVN Radio</button>
+    <button onclick="playRadio('Shalom', 'https://www.liveradio.es/https://stream.radio.co/s1383afdc9/listen?ver=828256', this)">Shalom</button>
+    <button onclick="playRadio('Revive', 'https://gains.reviveradio.net/proxy/revivemalayalam?mp=/stream', this)">Revive</button>
+    <button onclick="playRadio('Bafa', 'https://www.liveradio.es/http://198.245.60.88:8300/stream', this)">Bafa</button>
+    <button onclick="playRadio('World To World Radio', 'https://www.liveradio.es/https://streaming.radio.co/s4f2cc35de/listen', this)">World To World Radio</button>
+    <button onclick="playRadio('Ephphatha Radio', 'https://ephphatha.radioca.st/stream', this)">Ephphatha Radio</button>
+    <button onclick="playRadio('Green Radio', 'https://www.liveradio.es/http://108.170.51.230:8010/stream', this)">Green Radio</button>
+    <button onclick="playRadio('Rafa Bible Radio', 'https://gains.reviveradio.net/proxy/rafabibleradiom?mp=/stream', this)">Rafa Bible Radio</button>
+    <button onclick="playRadio('Luminous Radio', 'https://www.liveradio.es/https://patmos.cdnstream.com/proxy/luminous/?mp=/stream', this)">Luminous Radio</button>
+    <button onclick="playRadio('Green Radio', 'https://www.liveradio.es/https://malayalamchristianradios.com/stream/greenradio', this)">Green Radio</button>
+    <button onclick="playRadio('Psalms Radio', 'https://www.liveradio.es/https://malayalamchristianradios.com/stream/psalmsradio', this)">Psalms Radio</button>
+    <button onclick="playRadio('Shalom Beats Radio', 'https://www.liveradio.es/https://malayalamchristianradios.com/stream/shalombeatsradio', this)">Shalom Beats Radio</button>
+</div>
+
+  <div id="previousStations">
+    <h2>Previously Played:</h2>
+    <ul id="previousList"></ul>
+  </div>
+
+  <button id="togglePlayerBtn" onclick="togglePlayer()">Player</button>
+  <button id="autoShuffleBtn" onclick="toggleAutoShuffle()">Start Shuffle</button>
+
+  <audio id="player" controls class="hidden">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    const player = document.getElementById('player');
+    let currentButton = null;
+    let autoShuffleInterval = null;
+    const buttons = document.querySelectorAll('#stations button');
+    const previousList = document.getElementById('previousList');
+    let lastPlayedStations = [];
+
+    function playRadio(name, url, button) {
+      // Set document title
+      document.title = `Cataloguing - ${name}`;
+
+      // Add the station to previously played list
+      if (lastPlayedStations.length >= 5) {
+        lastPlayedStations.shift(); // Remove the oldest station if list is full
+      }
+      lastPlayedStations.push(name);
+
+      // Update the displayed list
+      updatePreviousList();
+
+      // Reset previous active button
+      if (currentButton) {
+        currentButton.classList.remove('active');
+      }
+
+      // Set current active button
+      button.classList.add('active');
+      currentButton = button;
+
+      // Check if the URL ends with .m3u8 to determine if it's an HLS playlist
+      if (url.endsWith('.m3u8')) {
+        if (Hls.isSupported()) {
+          const hls = new Hls();
+          hls.loadSource(url);
+          hls.attachMedia(player);
+          hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            player.play()
+              .then(() => console.log(`Playing ${name}`))
+              .catch(err => console.error(`Error playing ${name}: ${err}`));
+          });
+        } else if (player.canPlayType('application/vnd.apple.mpegurl')) {
+          player.src = url;
+          player.play()
+            .then(() => console.log(`Playing ${name}`))
+            .catch(err => console.error(`Error playing ${name}: ${err}`));
+        } else {
+          console.error('HLS not supported');
+        }
+      } else {
+        player.src = url;
+        player.play()
+          .then(() => console.log(`Playing ${name}`))
+          .catch(err => console.error(`Error playing ${name}: ${err}`));
+      }
+    }
+
+    function updatePreviousList() {
+      previousList.innerHTML = ''; // Clear previous list
+
+      lastPlayedStations.forEach(station => {
+        const listItem = document.createElement('li');
+        listItem.textContent = station;
+        previousList.appendChild(listItem);
+      });
+    }
+
+    function shuffleRadio() {
+      const randomIndex = Math.floor(Math.random() * buttons.length);
+      buttons[randomIndex].click();
+    }
+
+    function toggleAutoShuffle() {
+      const autoShuffleBtn = document.getElementById('autoShuffleBtn');
+      if (autoShuffleInterval) {
+        clearInterval(autoShuffleInterval);
+        autoShuffleInterval = null;
+        autoShuffleBtn.textContent = 'Start Shuffle';
+        autoShuffleBtn.style.backgroundColor = '#808080';
+      } else {
+        autoShuffleInterval = setInterval(shuffleRadio, 15000); // 15 seconds
+        autoShuffleBtn.textContent = 'Stop Shuffle';
+        autoShuffleBtn.style.backgroundColor = '#000000';
+        shuffleRadio(); // Start with a random station immediately
+      }
+    }
+
+    function togglePlayer() {
+      const player = document.getElementById('player');
+      const togglePlayerBtn = document.getElementById('togglePlayerBtn');
+      if (player.classList.contains('hidden')) {
+        player.classList.remove('hidden');
+        togglePlayerBtn.textContent = 'Player';
+      } else {
+        player.classList.add('hidden');
+        togglePlayerBtn.textContent = 'Player';
+      }
+    }
+
+    function toggleStations() {
+      const stations = document.getElementById('stations');
+      const toggleStationsBtn = document.getElementById('toggleStationsBtn');
+      if (stations.classList.contains('hidden')) {
+        stations.classList.remove('hidden');
+        toggleStationsBtn.textContent = 'Hide Stations';
+      } else {
+        stations.classList.add('hidden');
+        toggleStationsBtn.textContent = 'Stations';
+      }
+    }
+
+    function playPreviousStation() {
+      if (lastPlayedStations.length > 1) {
+        const previousStationName = lastPlayedStations[lastPlayedStations.length - 2];
+        const previousButton = Array.from(buttons).find(button => button.textContent === previousStationName);
+        if (previousButton) {
+          previousButton.click();
+        }
+      }
+    }
+
+    function playRandomStation() {
+      shuffleRadio();
+    }
+
+document.addEventListener('keydown', (event) => {
+      const key = event.key.toLowerCase();
+      if (key === 'a') {
+        playPreviousStation();
+      } else if (key === 'd') {
+        playRandomStation();
+      } else if (key === 's') {
+        toggleAutoShuffle();
+      } else if (key === 'm') {
+        player.muted = !player.muted; // Toggle mute
+      }
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</body>
+</html>
