@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en" class="light-mode">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cataloguing</title>
+  <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/ravana69/radio/main/favicon.ico">
+  <style>
+    :root {
+      --bg-color: #f0f0f0;
+      --text-color: #333;
+      --button-bg: #4CAF50;
+      --button-hover: #45a049;
+      --active-button: #2196F3;
+      --shuffle-button: #008CBA;
+      --toggle-button: #f44336;
+      --player-bg: #fff;
+      --player-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .dark-mode {
+      --bg-color: #1e1e1e;
+      --text-color: #f0f0f0;
+      --button-bg: #3f51b5;
+      --button-hover: #3949ab;
+      --active-button: #673ab7;
+      --shuffle-button: #00bcd4;
+      --toggle-button: #e53935;
+      --player-bg: #2b2b2b;
+      --player-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding: 2rem;
+      text-align: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    #stations,
+    #previousStations {
+      margin-bottom: 2rem;
+    }
+
+    #previousStations {
+      text-align: left;
+    }
+
+    button {
+      background-color: var(--button-bg);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 5px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: var(--button-hover);
+    }
+
+    .active {
+      background-color: var(--active-button) !important;
+    }
+
+    #autoShuffleBtn {
+      background-color: var(--shuffle-button);
+    }
+
+    #togglePlayerBtn,
+    #toggleStationsBtn {
+      background-color: var(--toggle-button);
+    }
+
+    audio {
+      width: 100%;
+      max-width: 600px;
+      background-color: var(--player-bg);
+      border-radius: 4px;
+      padding: 1rem;
+      box-shadow: var(--player-shadow);
+      margin-top: 2rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cataloguing</h1>
+  <button id="toggleStationsBtn" onclick="toggleStations()">Stations</button>
+  <div id="stations" class="hidden">
+<button onclick="playRadio('Mirchi', 'https://listen.openstream.co/4603/audio', this)">Mirchi</button>
+<button onclick="playRadio('Vdesi', 'https://www.liveradio.es/https://stream.radio.co/s42e977b6c/listen', this)">Vdesi</button>
+<button onclick="playRadio('Non Stop Hindi', 'https://www.liveradio.es/http://198.178.123.14:8216/stream', this)">Non Stop Hindi</button>
+<button onclick="playRadio('Beyond', 'https://www.liveradio.es/https://s6.yesstreaming.net/proxy/john1237?mp=/live', this)">Beyond</button>
+<button onclick="playRadio('Bombay Beats', 'https://www.liveradio.es/https://strmreg.1.fm/bombaybeats_mobile_mp3', this)">Bombay Beats</button>
+<button onclick="playRadio('Trap', 'https://www.liveradio.es/https://eu9.fastcast4u.com/proxy/soudip20?mp=/;', this)">Trap</button>
+<button onclick="playRadio('Rangeela', 'https://rangeelaradio.radioca.st/;', this)">Rangeela</button>
+<button onclick="playRadio('Mirchi Top 20', 'https://www.liveradio.es/https://drive.uber.radio/uber/bollywoodnow/icecast.audio', this)">Mirchi Top 20</button>
+<button onclick="playRadio('Bollywood Mix', 'https://www.liveradio.es/https://drive.uber.radio/uber/bollywoodmix/icecast.audio', this)">Bollywood Mix</button>
+<button onclick="playRadio('Taal', 'https://www.liveradio.es/http://radio.punjabrocks.com:9998/;', this)">Taal</button>
+<button onclick="playRadio('Bollywood Dance', 'https://www.liveradio.es/https://drive.uber.radio/uber/bollywooddance/icecast.audio', this)">Bollywood Dance</button>
+<button onclick="playRadio('Filmy Mirchi', 'https://www.liveradio.es/http://drive.uber.radio/uber-app/bollywood2010s/icecast.audio', this)">Filmy Mirchi</button>
+<button onclick="playRadio('Bolly Vibes', 'http://bollyvibes.radioca.st/stream', this)">Bolly Vibes</button>
+<button onclick="playRadio('Madhur Awaz', 'https://www.liveradio.es/http://janus.shoutca.st:9117/stream?type=http&nocache=19965', this)">Madhur Awaz</button>
+<button onclick="playRadio('Sangeet Mala', 'https://www.liveradio.es/https://rs.suricloud.com/radio/8030/radio.mp3', this)">Sangeet Mala</button>
+<button onclick="playRadio('Mirchi Edge', 'https://www.liveradio.es/https://nl4.mystreaming.net/uber-app/bollywooddiwali/icecast.audio', this)">Mirchi Edge</button>
+<button onclick="playRadio('Bollywood FM', 'https://www.liveradio.es/http://abm21.com.au:8000/CONTAINER116', this)">Bollywood FM</button>
+<button onclick="playRadio('Mirchi 90s', 'https://www.liveradio.es/https://nl4.mystreaming.net/uber/bollywood1990s/icecast.audio', this)">Mirchi 90s</button>
+<button onclick="playRadio('Udaan', 'https://www.liveradio.es/http://173.212.234.220/radio/8000/radio.mp3', this)">Udaan</button>
+<button onclick="playRadio('SD FM', 'https://www.liveradio.es/https://uk2.internet-radio.com/proxy/radiosdapp?mp=/stream', this)">SD FM</button>
+<button onclick="playRadio('Pehchaan', 'https://www.liveradio.es/https://www.liveradio.es/http://mscp3.live-streams.nl:8050/stream', this)">Pehchaan</button>
+<button onclick="playRadio('India Beat', 'https://n06a-eu.rcs.revma.com/hrcdg9ubv4uvv?rj-ttl=5&rj-tok=AAABkcYCSksAV63dQ286zFYobQ', this)">India Beat</button>
+<button onclick="playRadio('Himal', 'https://streaming.webhostnepal.com/8020/stream', this)">Himal</button>
+<button onclick="playRadio('Radio Taj', 'https://www.liveradio.es/http://live.radiotaj.com:9484/;stream.mp3', this)">Radio Taj</button>
+<button onclick="playRadio('Dil', 'https://www.liveradio.es/https://us3.streamingpulse.com/ssl/radiodil2', this)">Dil</button>
+  </div>
+
+  <div id="previousStations">
+    <h2>Previously Played:</h2>
+    <ul id="previousList"></ul>
+  </div>
+
+  <button id="togglePlayerBtn" onclick="togglePlayer()">Player</button>
+  <button id="autoShuffleBtn" onclick="toggleAutoShuffle()">Start Shuffle</button>
+
+  <audio id="player" controls class="hidden">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    const player = document.getElementById('player');
+    let currentButton = null;
+    let autoShuffleInterval = null;
+    const buttons = document.querySelectorAll('#stations button');
+    const previousList = document.getElementById('previousList');
+    let lastPlayedStations = [];
+
+    function playRadio(name, url, button) {
+      // Set document title
+      document.title = `Cataloguing - ${name}`;
+
+      // Add the station to previously played list
+      if (lastPlayedStations.length >= 5) {
+        lastPlayedStations.shift(); // Remove the oldest station if list is full
+      }
+      lastPlayedStations.push(name);
+
+      // Update the displayed list
+      updatePreviousList();
+
+      // Reset previous active button
+      if (currentButton) {
+        currentButton.classList.remove('active');
+      }
+
+      // Set current active button
+      button.classList.add('active');
+      currentButton = button;
+
+      // Check if the URL ends with .m3u8 to determine if it's an HLS playlist
+      if (url.endsWith('.m3u8')) {
+        if (Hls.isSupported()) {
+          const hls = new Hls();
+          hls.loadSource(url);
+          hls.attachMedia(player);
+          hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            player.play()
+              .then(() => console.log(`Playing ${name}`))
+              .catch(err => console.error(`Error playing ${name}: ${err}`));
+          });
+        } else if (player.canPlayType('application/vnd.apple.mpegurl')) {
+          player.src = url;
+          player.play()
+            .then(() => console.log(`Playing ${name}`))
+            .catch(err => console.error(`Error playing ${name}: ${err}`));
+        } else {
+          console.error('HLS not supported');
+        }
+      } else {
+        player.src = url;
+        player.play()
+          .then(() => console.log(`Playing ${name}`))
+          .catch(err => console.error(`Error playing ${name}: ${err}`));
+      }
+    }
+
+    function updatePreviousList() {
+      previousList.innerHTML = ''; // Clear previous list
+
+      lastPlayedStations.forEach(station => {
+        const listItem = document.createElement('li');
+        listItem.textContent = station;
+        previousList.appendChild(listItem);
+      });
+    }
+
+    function shuffleRadio() {
+      const randomIndex = Math.floor(Math.random() * buttons.length);
+      buttons[randomIndex].click();
+    }
+
+    function toggleAutoShuffle() {
+      const autoShuffleBtn = document.getElementById('autoShuffleBtn');
+      if (autoShuffleInterval) {
+        clearInterval(autoShuffleInterval);
+        autoShuffleInterval = null;
+        autoShuffleBtn.textContent = 'Start Shuffle';
+        autoShuffleBtn.style.backgroundColor = 'var(--shuffle-button)';
+      } else {
+        autoShuffleInterval = setInterval(shuffleRadio, 15000); // 15 seconds
+        autoShuffleBtn.textContent = 'Stop Shuffle';
+        autoShuffleBtn.style.backgroundColor = 'var(--toggle-button)';
+        shuffleRadio(); // Start with a random station immediately
+      }
+    }
+
+    function togglePlayer() {
+      const player = document.getElementById('player');
+      const togglePlayerBtn = document.getElementById('togglePlayerBtn');
+      if (player.classList.contains('hidden')) {
+        player.classList.remove('hidden');
+        togglePlayerBtn.textContent = 'Player';
+      } else {
+        player.classList.add('hidden');
+        togglePlayerBtn.textContent = 'Player';
+      }
+    }
+
+    function toggleStations() {
+      const stations = document.getElementById('stations');
+      const toggleStationsBtn = document.getElementById('toggleStationsBtn');
+      if (stations.classList.contains('hidden')) {
+        stations.classList.remove('hidden');
+        toggleStationsBtn.textContent = 'Hide Stations';
+      } else {
+        stations.classList.add('hidden');
+        toggleStationsBtn.textContent = 'Stations';
+      }
+    }
+
+    function playPreviousStation() {
+      if (lastPlayedStations.length > 1) {
+        const previousStationName = lastPlayedStations[lastPlayedStations.length - 2];
+        const previousButton = Array.from(buttons).find(button => button.textContent === previousStationName);
+        if (previousButton) {
+          previousButton.click();
+        }
+      }
+    }
+
+    function playRandomStation() {
+      shuffleRadio();
+    }
+
+    document.addEventListener('keydown', (event) => {
+      const key = event.key.toLowerCase();
+      if (key === 'a') {
+        playPreviousStation();
+      } else if (key === 'd') {
+        playRandomStation();
+      } else if (key === 's') {
+        toggleAutoShuffle();
+      } else if (key === 'm') {
+        player.muted = !player.muted; // Toggle mute
+      }
+    });
+
+    // Add event listener for toggle mode
+    const toggleModeBtn = document.createElement('button');
+    toggleModeBtn.textContent = 'Toggle Mode';
+    toggleModeBtn.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark-mode');
+    });
+    document.body.appendChild(toggleModeBtn);
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</body>
+</html>
