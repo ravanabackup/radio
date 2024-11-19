@@ -1,78 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light-mode">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cataloguing</title>
-<!-- Link to favicon -->
-<link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/ravana69/radio/main/favicon.ico">
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 160px;
-    background: url('https://rawgithubusercontent.deno.dev/ravana69/radio/main/excel.jpg') center center / cover no-repeat fixed;
-    color: #808080;
-  }
-  #stations {
-    margin-bottom: 20px;
-  }
-  #previousStations {
-    margin-bottom: 20px;
-    text-align: left;
-  }
-  audio {
-    width: 100%;
-    max-width: 400px;
-    margin: 20px auto;
-    display: block;
-    background-color: #ececec;
-    color: #fff;
-    border-radius: 5px;
-    padding: 10px;
-  }
-  .hidden {
-    display: none;
-  }
-  .active {
-    background-color: #779CE8;
-    color: #fff;
-  }
-  button {
-    background-color: #808080;
-    color: #ffffff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    margin: 5px;
-    cursor: pointer;
-  }
-  #autoShuffleBtn {
-    background-color: #808080;
-  }
-  audio::-webkit-media-controls-panel {
-    background-color: #808080;
-  }
-  audio::-webkit-media-controls-play-button,
-  audio::-webkit-media-controls-mute-button,
-  audio::-webkit-media-controls-timeline,
-  audio::-webkit-media-controls-current-time-display,
-  audio::-webkit-media-controls-time-remaining-display,
-  audio::-webkit-media-controls-seek-back-button,
-  audio::-webkit-media-controls-seek-forward-button,
-  audio::-webkit-media-controls-fullscreen-button,
-  audio::-webkit-media-controls-rewind-button,
-  audio::-webkit-media-controls-return-to-realtime-button,
-  audio::-webkit-media-controls-show-closed-captions-button {
-    filter: invert(0);
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cataloguing</title>
+  <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/ravana69/radio/main/favicon.ico">
+  <style>
+    :root {
+      --bg-color: #f0f0f0;
+      --text-color: #333;
+      --button-bg: #4CAF50;
+      --button-hover: #45a049;
+      --active-button: #2196F3;
+      --shuffle-button: #008CBA;
+      --toggle-button: #f44336;
+      --player-bg: #fff;
+      --player-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .dark-mode {
+      --bg-color: #1e1e1e;
+      --text-color: #f0f0f0;
+      --button-bg: #3f51b5;
+      --button-hover: #3949ab;
+      --active-button: #673ab7;
+      --shuffle-button: #00bcd4;
+      --toggle-button: #e53935;
+      --player-bg: #2b2b2b;
+      --player-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding: 2rem;
+      text-align: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    #stations,
+    #previousStations {
+      margin-bottom: 2rem;
+    }
+
+    #previousStations {
+      text-align: left;
+    }
+
+    button {
+      background-color: var(--button-bg);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 5px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: var(--button-hover);
+    }
+
+    .active {
+      background-color: var(--active-button) !important;
+    }
+
+    #autoShuffleBtn {
+      background-color: var(--shuffle-button);
+    }
+
+    #togglePlayerBtn,
+    #toggleStationsBtn {
+      background-color: var(--toggle-button);
+    }
+
+    audio {
+      width: 100%;
+      max-width: 600px;
+      background-color: var(--player-bg);
+      border-radius: 4px;
+      padding: 1rem;
+      box-shadow: var(--player-shadow);
+      margin-top: 2rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-  <h1></h1>
+  <h1>Cataloguing</h1>
   <button id="toggleStationsBtn" onclick="toggleStations()">Stations</button>
   <div id="stations" class="hidden">
-    <button onclick="playRadio('Clb', 'https://www.liveradio.es/https://eu10.fastcast4u.com/clubfmuae', this)">Clb</button>
+<button onclick="playRadio('Clb', 'https://www.liveradio.es/https://eu10.fastcast4u.com/clubfmuae', this)">Clb</button>
     <button onclick="playRadio('9FM', 'https://icecast.octosignals.com/radio90_final', this)">9FM</button>
     <button onclick="playRadio('Sno', 'https://27793.live.streamtheworld.com/SUNO917.mp3', this)">Sno</button>
     <button onclick="playRadio('Krlm', 'https://www.liveradio.es/https://ice31.securenetsystems.net/RADIOKERAL', this)">Krlm</button>
@@ -185,11 +214,11 @@
         clearInterval(autoShuffleInterval);
         autoShuffleInterval = null;
         autoShuffleBtn.textContent = 'Start Shuffle';
-        autoShuffleBtn.style.backgroundColor = '#808080';
+        autoShuffleBtn.style.backgroundColor = 'var(--shuffle-button)';
       } else {
         autoShuffleInterval = setInterval(shuffleRadio, 15000); // 15 seconds
         autoShuffleBtn.textContent = 'Stop Shuffle';
-        autoShuffleBtn.style.backgroundColor = '#000000';
+        autoShuffleBtn.style.backgroundColor = 'var(--toggle-button)';
         shuffleRadio(); // Start with a random station immediately
       }
     }
@@ -232,7 +261,7 @@
       shuffleRadio();
     }
 
-document.addEventListener('keydown', (event) => {
+    document.addEventListener('keydown', (event) => {
       const key = event.key.toLowerCase();
       if (key === 'a') {
         playPreviousStation();
@@ -244,6 +273,14 @@ document.addEventListener('keydown', (event) => {
         player.muted = !player.muted; // Toggle mute
       }
     });
+
+    // Add event listener for toggle mode
+    const toggleModeBtn = document.createElement('button');
+    toggleModeBtn.textContent = 'Toggle Mode';
+    toggleModeBtn.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark-mode');
+    });
+    document.body.appendChild(toggleModeBtn);
   </script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </body>
